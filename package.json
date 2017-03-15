@@ -1,0 +1,28 @@
+{
+  "name": "doublelist",
+  "version": "1.0.0",
+  "description": "",
+  "main": "element.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "mocha": "^3.2.0"
+  },
+  "devDependencies": {
+    "mocha": "^3.2.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neverminderer1/doublelist.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/neverminderer1/doublelist/issues"
+  },
+  "homepage": "https://github.com/neverminderer1/doublelist#readme"
+}
