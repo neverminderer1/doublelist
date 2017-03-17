@@ -4,11 +4,12 @@ let Element = require('./element');
 
 class LinkedList {
     constructor(...args) {
-        this._head = null;
-        this._tail = null;
+        this._head  = null;
+        this.length = 0;
 
         if(arguments.length === 1) {
             if(Array.isArray(arguments[0])) {
+                this.length++;
                 this._head = new Element(arguments[0][0], null, null);
 
                 for(let i=1; i < arguments[0].length; i++) {
@@ -16,98 +17,159 @@ class LinkedList {
                 }
 
             } else {
+                this.length++;
                 this._head = new Element(arguments[0], null, null);
             }
         }
 
         if(arguments.length > 1) {
-            for(let i=0; i < arguments.length; i++) {
+            this.length++;
+            this._head = new Element(arguments[0], null, null);
+
+            for(let i=1; i < arguments.length; i++) {
                 this.add(arguments[i]);
             }
         }
     }
 
     add(value) {
-        let newElement;
+        let node = this._head;
 
-        if(this._tail) {
-            newElement = new Element(value, this._tail, null);
-        } else {
-            newElement = new Element(value, this._head, null);
+        while(node.next) {
+            node = node.next;
         }
 
-        this._tail = newElement;
+        node.next = new Element(value, node, null);
+        this.length++;
     }
 
     addFirst(value) {
-        let newElement = new Element(value, null, this._head);
-        this._head = newElement;
+        let element = new Element(value, null, this._head);
+        this._head.previous = element;
+        this._head = element;
+
+        this.length++;
     }
 
     remove(value) {
         let node = this._head;
-        while(node.next) {
+
+        while(node && node.next) {
+
             if(node.value === value) {
-                node.prev = node.next;
-                return 'Found!';
+                if(node.next && node.previous) {
+                    node.next.previous = node.previous;
+                    node.previous.next = node.next;
+                    node = null;
+
+                    this.length--;
+                    return;
+
+                } else if(node.next && !node.previous) {
+                    node.next.previous = null;
+                    node = node.next;
+                    this._head = node;
+
+                    this.length--;
+                    return;
+                }
+            }
+
+            if(node) {
+                node = node.next;
             }
         }
 
-        return 'Not Found!';
+        if(this.length === 1) {
+            this._head = null;
+            node = null;
+            this.length--;
+            return;
+        }
+
+        if(node && node.value === value) {
+            node.previous.next = null;
+            node = null;
+            this.length--;
+            return;
+        }
     }
 
     removeAll(value) {
         let node = this._head;
-        while(node.next) {
+        let i = this.length;
+
+        while(i > 0) {
             if(node.value === value) {
-                node.prev = node.next;
+                this.remove(value);
             }
+
+            node = node.next;
+            i--;
         }
     }
 
     getCount() {
-        let count = 0;
-        let node = this._head;
-        while(node.next) {
-            count++;
-            node = node.next;
-        }
-
-        return count;
+        return this.length;
     }
 
     convertToArray() {
-        let resultArray = [];
+
+        if(!this._head) {
+            return [];
+        }
+
         let node = this._head;
+        let resultArray = [node.value];
 
         while(node.next) {
-            resultArray.push(node.value);
             node = node.next;
+            resultArray.push(node.value);
         }
+
+        return resultArray;
     }
 
-    addAfter(value) {
+    addAfter(afterValue, value) {
         let node = this._head;
+        let i = this.length;
 
-        while(node.next) {
-            if(node.value === value) {
-                let newElement = new Element(value, node, node.next);
-                node.next = newElement;
+        while(i > 0) {
+            if(node.value === afterValue) {
+                let newElem = new Element(value, null, null);
 
-                return 'Added!';
+                if(!node.next) {
+                    node.next = newElem;
+
+                    this.length++;
+                    return;
+                }
+
+                if(node.next) {
+                    newElem.next        = node.next;
+                    newElem.previous    = node;
+                    node.next           = newElem;
+
+                    this.length++;
+                    return;
+                }
             }
+
             node = node.next;
+            i--;
         }
 
-        return 'Not added!';
+        return;
     }
 
     print() {
         let node = this._head;
+        let i = this.length;
 
-        while(node.next) {
-            console.log(node, ',');
+        while(i > 0) {
+            console.log(node.value);
             node = node.next;
+            i--;
         }
     }
 
