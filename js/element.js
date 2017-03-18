@@ -31,5 +31,3 @@ class Element  {
         this._value = value;
     }
 }
-
-module.exports = Element;

@@ -1,24 +1,18 @@
 "use strict";
 
-let Element = require('./element');
-
 class LinkedList {
     constructor(...args) {
         this._head  = null;
         this.length = 0;
 
         if(arguments.length === 1) {
-            if(Array.isArray(arguments[0])) {
-                this.length++;
-                this._head = new Element(arguments[0][0], null, null);
+            this.length++;
+            this._head = new Element(arguments[0][0], null, null);
 
-                for(let i=1; i < arguments[0].length; i++) {
+            if(Array.isArray(arguments[0])) {
+                for (let i = 1; i < arguments[0].length; i++) {
                     this.add(arguments[0][i]);
                 }
-
-            } else {
-                this.length++;
-                this._head = new Element(arguments[0], null, null);
             }
         }
 
@@ -33,20 +27,30 @@ class LinkedList {
     }
 
     add(value) {
-        let node = this._head;
+        let newElement = new Element(value, null, null);
 
-        while(node.next) {
-            node = node.next;
+        if(!this.length) {
+            this._head = newElement;
+            this.length++;
+
+        } else {
+            let node = this._head;
+
+            while(node.next) {
+                node = node.next;
+            }
+
+            node.next = newElement;
+            newElement.previous = node;
+
+            this.length++;
         }
-
-        node.next = new Element(value, node, null);
-        this.length++;
     }
 
     addFirst(value) {
-        let element = new Element(value, null, this._head);
+        let element         = new Element(value, null, this._head);
         this._head.previous = element;
-        this._head = element;
+        this._head          = element;
 
         this.length++;
     }
@@ -97,7 +101,7 @@ class LinkedList {
 
     removeAll(value) {
         let node = this._head;
-        let i = this.length;
+        let i    = this.length;
 
         while(i > 0) {
             if(node.value === value) {
@@ -114,17 +118,14 @@ class LinkedList {
     }
 
     convertToArray() {
+        let i           = this.length;
+        let node        = this._head;
+        let resultArray = [];
 
-        if(!this._head) {
-            return [];
-        }
-
-        let node = this._head;
-        let resultArray = [node.value];
-
-        while(node.next) {
-            node = node.next;
+        while(i > 0) {
             resultArray.push(node.value);
+            node = node.next;
+            i--;
         }
 
         return resultArray;
@@ -132,7 +133,7 @@ class LinkedList {
 
     addAfter(afterValue, value) {
         let node = this._head;
-        let i = this.length;
+        let i    = this.length;
 
         while(i > 0) {
             if(node.value === afterValue) {
@@ -158,8 +159,6 @@ class LinkedList {
             node = node.next;
             i--;
         }
-
-        return;
     }
 
     print() {
@@ -174,5 +173,3 @@ class LinkedList {
     }
 
 }
-
-module.exports = LinkedList;

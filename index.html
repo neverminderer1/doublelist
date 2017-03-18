@@ -2,12 +2,69 @@
 <head>
     <script src="js/element.js"></script>
     <script src="js/linked-list.js"></script>
-    <style src="node_modules/bootstrap/dist/css/bootstrap.min.css"></style>
+    <style>
+        .block {
+            border: solid 1px black;
+            width: 70px;
+            height: 70px;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .input-block {
+            margin: 20px;
+        }
+
+        .input {
+            width: 200px;
+            height: 50px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <div><input type="text" placeholder="Enter a value"><button onclick="">Add value</button></div>
-        <div style="border: solid 1px black;width: 70px;height: 70px">Value</div>
+        <div class="input-block"><input class="input" id="value" type="text" placeholder="Enter a value">
+            <button class="input" onclick="addNode()">Add value</button>
+        </div>
+        <div class="input-block" id="index"></div>
     </div>
+
+    <script>
+        let list = new LinkedList();
+
+        function render() {
+            let listArr = list.convertToArray();
+
+            for(let i=0; i<listArr.length; i++) {
+                let element = document.createElement('DIV');
+                let text = document.createTextNode(listArr[i]);
+
+                element.setAttribute('class', 'block');
+                element.setAttribute('onclick', 'deleteNode(this.innerText)');
+
+                element.appendChild(text);
+
+                document.getElementById('index').appendChild(element);
+            }
+        }
+
+        function addNode() {
+            let value = document.getElementById("value").value;
+            list.add(value);
+
+            document.getElementById('index').innerHTML = "";
+            render();
+        }
+
+        function deleteNode(value) {
+            list.remove(value);
+
+            document.getElementById('index').innerHTML = "";
+            render();
+        }
+
+        render();
+
+    </script>
 </body>
 </html>
